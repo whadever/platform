@@ -1,6 +1,0 @@
-[15-Jun-2015 05:22:54 America/Denver] PHP Parse error:  syntax error, unexpected end of file in /home/xprocod1/public_html/xprocoders/horncastle/tms/application/models/request_model.php on line 364
-[15-Jun-2015 05:24:45 America/Denver] PHP Parse error:  syntax error, unexpected ''use' (T_ENCAPSED_AND_WHITESPACE) in /home/xprocod1/public_html/xprocoders/horncastle/tms/application/models/request_model.php on line 484
-[15-Jun-2015 05:25:38 America/Denver] PHP Parse error:  syntax error, unexpected end of file in /home/xprocod1/public_html/xprocoders/horncastle/tms/application/models/request_model.php on line 124
-[31-Aug-2015 09:51:41 NZ] PHP Parse error:  syntax error, unexpected '}' in /home/xprocod1/public_html/xprocoders/williams_platform/tms/application/views/includes/header.php on line 144
-[01-Sep-2015 01:29:43 America/Denver] PHP Parse error:  syntax error, unexpected end of file in /home/xprocod1/public_html/xprocoders/williams_platform/tms/application/models/Request_model.php on line 288
-[02-Sep-2015 16:37:41 NZ] PHP Parse error:  syntax error, unexpected ''ac' (T_ENCAPSED_AND_WHITESPACE) in /home/xprocod1/public_html/xprocoders/williams_platform/tms/application/views/includes/header.php on line 185
