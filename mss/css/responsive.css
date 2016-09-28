@@ -1,0 +1,39 @@
+
+@media only screen and (max-width:1024px){
+
+body .container-fluid {
+    width: 95%;
+}
+#maincontent {
+    min-height: 145px;
+}
+.navbar.navbar-default{
+	min-height:0px;
+}	
+.responsive-menu ul li {
+    width: 100%;
+}
+.responsive-menu ul li a {
+    width: 100%;
+    display: inline-block;
+    line-height: 33px;
+    padding: 0px 0px 0px 25px;
+}
+.logo img {
+    padding: 0px;
+    width: 100%;
+}
+.user-menu {
+    padding-top: 4px;
+}
+.res-hidden{
+	display: none;
+}
+
+.hover-product {
+    width: 50%;
+
+}
+
+}
+

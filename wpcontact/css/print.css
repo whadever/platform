@@ -1,0 +1,38 @@
+.header{
+    display: none;
+}
+
+.footer{
+    display: none;
+}
+.sidebar{
+   display: none; 
+}
+
+.button-wrapper {
+    display: none;
+}
+#comp-search-form{
+    display: none;
+}
+
+.all-title {
+    color: #FF0000;
+   
+    font-size: 20px;
+    line-height: 22px;
+    margin-bottom: 15px;
+    padding: 0;
+    
+}
+table {
+    border-top: 1px solid #EEEEEE;
+    border-left: 1px solid #EEEEEE;
+    width: 100%;
+}
+
+table tbody td {
+    border-bottom: 1px solid #EEEEEE;
+    border-right: 1px solid #EEEEEE;
+    padding:2px;
+}

@@ -1,0 +1,102 @@
+* {
+  box-sizing: border-box;
+}
+#fuzzSearch {
+  width: 100%;
+}
+#fuzzNameContainer {
+    border: 2px solid #eee;
+    cursor: pointer;
+    height: 34px;
+    padding: 5px 10px;
+    width: 100%;
+}
+.fuzzName {
+  display: inline-block;
+  width: 96%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.fuzzArrow {
+  width: 0;
+  border-style: solid;
+  border-color: #333 transparent transparent transparent;
+  border-width: 7px;
+  display: inline-block;
+  cursor: pointer;
+  position: relative;
+  top: 8px;
+  float:right;
+  -webkit-transition: all 0.1s ease-in;
+  transition: all 0.1s ease-in;
+}
+.fuzzArrow:hover {
+  border-top-color: #888;
+}
+.fuzzArrow.fuzzArrowUp {
+  border-color: transparent transparent #333 transparent;
+  top: 0px;
+}
+#fuzzDropdownContainer {
+  display: none;
+  width: 100%;
+  margin: 0 0 0px 0;
+  border: 1px solid #ccc;
+  padding: 10px 10px 4px;
+  position: relative;
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+  max-height: 220px;
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+.fuzzMagicBox {
+  width: 99%;
+  height: 30px;
+  margin: 0 auto;
+}
+.fuzzSearchIcon {
+  width: 20px;
+  height: 14px;
+  position: relative;
+  display: inline-block;
+  background: transparent;
+  top: -20px;
+  left: 95%;
+}
+.fuzzSearchIcon:before, .fuzzSearchIcon:after {
+  content: '';
+  display: block;
+  position: absolute;
+  right: 10px;
+}
+.fuzzSearchIcon:before {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: 1px solid #aaa;
+}
+.fuzzSearchIcon:after {
+  height: 7px;
+  border-right: 1px solid #aaa;
+  top: 9px;
+  -webkit-transform: rotate(-32deg);
+  -ms-transform: rotate(-32deg);
+}
+#fuzzResults {
+  cursor: pointer;
+  padding: 0;
+  margin: 0;
+}
+#fuzzResults li {
+  list-style: none;
+  margin-bottom: 5px;
+  padding: 0px;
+  transition: all 0.1s ease-out;
+}
+#fuzzResults li:hover, #fuzzResults li.selected {
+  color: #fff;
+  background: #1251a4;
+}
+

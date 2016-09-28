@@ -1,0 +1,259 @@
+body{background-color:#fff; color: #333;}
+a {
+	color: #ebb72c;
+}
+a:hover {
+	color: #ebb72c;
+}
+.header {
+    border-bottom: 2px solid #231f20;
+    padding: 10px 0;
+	
+}
+.logo{margin:0px auto;text-align:center;}
+.main-content {
+	min-height:500px; 
+	margin: 15px 0 10px;
+}
+.delete > img, .update > img{
+	width:23px; height:23px;
+}
+.client-add-button {
+    float: right;
+}
+.title h4{
+	margin-bottom: 5px;
+    margin-top: 5px;
+}
+.client-list table thead {
+    background: #818285;
+	color:#fff;
+}
+.client-list table.table thead tr th, .client-list table.table tbody tr td {
+    border: 1px solid #fff;
+}
+.client-list .table > thead:first-child > tr:first-child > td, .client-list .table > thead:first-child > tr:first-child > th{
+	border-top: 1px solid #fff;
+}
+.client-list button.modal-button {
+    background: none;
+    border: medium none;
+    padding: 0;
+}
+.modal-dialog {
+    margin: 10% auto;
+}
+.custom-modal .modal-content {
+    border: 2px solid #a9443d;
+}
+.custom-modal p, .custom-modal h4 {
+    text-align: center;
+	color: #333;
+	margin: 0px;
+	font-size: 13px;
+}
+.custom-modal .delete-modal {
+    font-size: 16px;
+}
+.custom-modal .note-modal {
+    font-size: 13px;
+    font-style: italic;
+}
+.custom-modal .modal-footer {
+    border-top: 0 solid #e5e5e5;
+    padding: 0 15px 15px;
+    text-align: center;
+}
+.custom-modal .modal-submit {
+    background: #333;
+    border: medium none;
+    color: #fff;
+}
+.custom-modal .modal-submit:hover {
+    background: #333;
+}
+#modalDelete.btn-danger {
+    background-color: #034370;
+    border-color: #034370;
+    color: #fff;
+}
+#modalDelete.btn-danger:hover {
+    background-color: #034370;
+    border-color: #034370;
+    color: #fff;
+}
+
+.title-inner {
+    border: 2px solid #231f20;
+    border-radius: 10px;
+    padding: 15px 20px;
+}
+.title-inner > img {
+    float: left;
+    margin-right: 20px;
+}
+.title-inner > p {
+    margin: 0;
+}
+.main-page {
+    border: 2px solid #231f20;
+    border-radius: 10px;
+    margin-top: 10px;
+    padding: 20px;
+}
+.table > tbody > tr > td, .table > thead > tr > td, .table > thead > tr > th {
+    padding: 6px;
+}
+.client-list .table > thead:first-child > tr:first-child > td, .client-list .table > thead:first-child > tr:first-child > th {
+    border-top: 0px solid #d2232a;
+}
+.table-striped > tbody > tr:nth-of-type(2n+1) {
+    background-color: #e7e7e8;
+}
+.table-striped > tbody > tr:nth-of-type(2n+2) {
+    background-color: #d1d2d4;
+}
+.table {
+    margin-bottom: 0;
+}
+.searchbox {
+    padding-bottom: 15px;
+}
+.searchbox #search-header {
+    background: #e1e1e1;
+    padding: 5px;
+    text-align: center;
+}
+.searchbox .hiders {
+    border-bottom: 2px solid #e1e1e1;
+    border-left: 2px solid #e1e1e1;
+    border-right: 2px solid #e1e1e1;
+    padding: 10px 15px 15px;
+    width: 100%;
+	display: none;
+}
+.searchbox label {
+    font-weight: 100;
+}
+#project_add_edit_page label {
+    font-weight: 100;
+}
+.checkbox input[type="checkbox"] {
+    margin-left: -10px;
+}
+.checkbox, .radio {
+    float: left;
+	width: 80%;
+}
+.system-hover {
+    float: right;
+    text-align: right;
+    width: 25px;
+	margin: 10px 0;
+}
+.hover {
+    background: #fff;
+    border: 3px solid #231f20;
+    border-radius: 12px;
+    display: none;
+    margin-left: 44px;
+    margin-top: -16%;
+    padding: 10px 15px;
+    position: absolute;
+    text-align: left;
+    width: 260px;
+    z-index: 9999;
+	 height: 85px;
+}
+.hover:after, .hover:before {
+	right: 100%;
+	top: 50%;
+	border: solid transparent;
+	content: " ";
+	height: 0;
+	width: 0;
+	position: absolute;
+	pointer-events: none;
+}
+.hover:after {
+	border-color: rgba(136, 183, 213, 0);
+	border-right-color: #ffffff;
+	border-width: 15px;
+	margin-top: -15px;
+}
+.hover:before {
+	border-color: rgba(204, 22, 24, 0);
+	border-right-color: #231f20;
+	border-width: 20px;
+	margin-top: -20px;
+}
+.system-hover:hover .hover {
+    display: block;
+}
+#button {
+    background: #d1d3d4;
+    border: medium none;
+    color: #fff;
+}
+#submit {
+    background: #a7a9ac;
+    border: medium none;
+    color: #fff;
+}
+#userdelete {
+    background-color: #595b60;
+    border: none;
+    color: #fff !important;
+}
+.DeleteUser .modal-content {
+    border: 3px solid #d8d8da;
+    border-radius: 10px;
+    box-shadow: 0 0 0 0;
+}
+.DeleteUser .modal-dialog {
+    width: 415px;
+}
+.DeleteUser .modal-header {
+    background: #d8d8da;
+    border-bottom: 0 solid #e5e5e5;
+    padding: 8px 15px;
+}
+.DeleteUser p {
+    margin:0px;
+}
+.DeleteUser .modal-body {
+    color: #595b60;
+    text-align: center;
+}
+.DeleteUser .modal-footer {
+    border-top: 0 solid #e5e5e5;
+    padding: 0 15px 15px;
+    text-align: center;
+}
+.DeleteUser .btn {
+    width: 34%;
+	color: #fff !important;
+}
+.DeleteUser .btn-default {
+    background-color: #d2d3d5;
+    border: none;
+}
+.DeleteUser .btn-default:hover {
+    background-color: #d2d3d5;
+    border: none;
+}
+.DeleteUser #modalDelete.btn-danger {
+    background-color: #a8a9ad;
+    border: none;
+}
+.DeleteUser #modalDelete.btn-danger:hover {
+    background-color: #a8a9ad;
+    border: none;
+}
+.client-list a {
+    color: #000000 !important;
+}
+.tipso_style {
+    border-bottom: 0px dotted !important;
+    cursor: help;
+}

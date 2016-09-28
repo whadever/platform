@@ -1,0 +1,63 @@
+/**
+ *
+ * Apply Here your Custom CSS
+ *
+*/
+
+body {
+	
+}
+.systemTitle{background-color: #ebebeb;min-height: 40px;}
+.systemTitle h2{color: #80867c;
+font-size: 46px;
+font-weight: bold;
+padding: 2px 0 0;
+}
+#tooltip {
+    border: 2px solid #00aeef;
+    min-width: 160px;
+    padding: 10px;
+    text-align: center;
+    background: #fff;
+}
+#tooltip:after {
+    border-color: rgba(136, 183, 213, 0);
+    border-right-color: #ffffff;
+    border-width: 11px;
+    margin-top: -11px;
+}
+#tooltip:before {
+    border-color: rgba(204, 22, 24, 0);
+    border-right-color: #0a446e;
+    border-width: 14px;
+    margin-top: -14px;
+}
+#tooltip:after, .hover:before {
+    right: 100%;
+    top: 50%;
+    border: solid transparent;
+    content: " ";
+    height: 0;
+    width: 0;
+    position: absolute;
+    pointer-events: none;
+}
+
+.class-routine .class {
+    background: #d7114c none repeat scroll 0 0;
+    color: #373e4a;
+    font-weight: bold;
+    padding: 5px 3px;
+    text-align: center;
+}
+.class-routine .table th{
+	border:none;
+	font-weight: bold;
+}
+.class-routine .table td{
+	border:none;
+}
+.document-filestyle .input-group .form-control {
+    background: #fff none repeat scroll 0 0;
+    margin-right: 5px;
+}

@@ -1,0 +1,321 @@
+/* 
+    Document   : newtms
+    Created on : May 6, 2015, 2:50:36 PM
+    Author     : user
+    Description:
+        Purpose of the stylesheet follows.
+
+old bread cum
+   .breadcrumb  li {
+        float: left;
+        display: inline-block;
+        margin-left: 40px;
+    }  
+    
+.breadcrumb > li {
+  
+   height: 40px;
+   background: #ccc;
+   position: relative;
+   -moz-border-radius:    10px;
+   -webkit-border-radius: 10px;
+   
+}
+.breadcrumb > li:after {
+   content:"";
+   position: absolute;
+   left: 100%;
+   top: 0;
+   width: 0;
+   height: 0;
+   border-top: 20px solid transparent;
+   border-left: 40px solid #ccc;
+   border-bottom: 20px solid transparent;
+}
+
+.breadcrumb > li:before {
+   content:"";
+   position: absolute;
+   left: 100%;
+   top: 0;
+   width: 0;
+   height: 0;
+   border-top: 20px solid transparent;
+   border-left: 40px solid #ccc;
+   border-bottom: 20px solid transparent;
+}
+.breadcrumb .active,
+.breadcrumb .active:hover{
+  font-weight: bold;
+  background: none;
+}
+
+.breadcrumb .active::after,
+.breadcrumb .active::before{
+  content: normal;
+}
+*/
+ /*   
+ .breadcrumb ul{
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.breadcrumb{
+  overflow: hidden;
+  width: 100%;
+}
+
+.breadcrumb li{
+  float: left;
+  margin: 0 .5em 0 2em;
+}
+
+.breadcrumb li{
+  background: #ddd;
+  padding: .8em 1em;
+  float: left;
+  text-decoration: none;
+  color: #444;
+  text-shadow: 0 1px 0 rgba(255,255,255,.5); 
+  position: relative;
+}
+
+.breadcrumb li:hover{
+  background: #EBEBEB;
+}
+.breadcrumb li:first-child::before{
+  content: "";
+  position: absolute;
+  top: 50%; 
+  margin-top: -1.5em;   
+  border-width: 0;
+  border-style: solid;
+  border-color: #ddd #ddd #ddd transparent;
+  
+}
+.breadcrumb li::before{
+  content: "";
+  position: absolute;
+  top: 50%; 
+  margin-top: -1.5em;   
+  border-width: 1.5em 0 1.5em 2em;
+  border-style: solid;
+  border-color: #ddd #ddd #ddd transparent;
+  left: -2em;
+}
+
+.breadcrumb li:hover::before{
+  border-color: #EBEBEB #EBEBEB #EBEBEB transparent;
+}
+
+.breadcrumb li::after{
+  content: "";
+  position: absolute;
+  top: 50%; 
+  margin-top: -1.5em;   
+  border-top: 1.5em solid transparent;
+  border-bottom: 1.5em solid transparent;
+  border-left: 2em solid #ddd;
+  right: -2em;
+}
+
+.breadcrumb li:hover::after{
+  border-left-color: #EBEBEB;
+}
+
+.breadcrumb > li + li::before{
+    content:"" !important;
+}
+ 
+ 
+*/
+
+root { 
+    display: block;
+}
+
+ #newtms-title{
+        background:#ebebeb;   
+        
+        padding: 15px 20px;
+    }
+    .company td{font-size: 18px;}
+    .alert{
+        margin-top: 10px;
+    }
+    #maincontent .ui-accordion .ui-accordion-header .ui-accordion-header-icon{
+        position: absolute; 
+        left: 100%; 
+        margin-left: -30px; 
+        top: 50%; 
+        margin-top: -8px;
+        padding-left: 1em;
+    }
+    #accordion h3{
+        margin-top: 10px !important;
+        font-size: 18px;
+        font-weight: bold;
+    }
+    #maincontent .ui-accordion .ui-accordion-icons{
+        padding-left: 1.2em;
+    }
+    #accordion .ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default{
+        background:#F5F5F5;
+    }
+    #maincontent .ui-accordion .ui-accordion-content{
+        padding:1em 0em;
+    }
+    #maincontent .searchbox {
+        border: 1px solid #ccc;
+        margin-top: 10px;
+        padding: 0;
+        text-align: center;
+        overflow: hidden;
+    }
+    .hiders{
+        margin: 10px; 
+        overflow: hidden;
+    }
+    #maincontent hr { background-color: #CC1618; height: 1px; border: 0; }
+
+#company-title{
+         background:#ebebeb;   
+        
+        padding: 10px;
+    }
+    
+    .company_request tr th,.company_request tr td{
+        padding-left: 5px;
+    }
+    .company_project tr th, .company_project tr td{
+        padding-left: 5px;
+    }
+    .box{
+        margin:0px 0px 30px; 
+        border:1px solid #eee;
+    }
+    /*
+    .col-sm-6, .col-md-6{
+        border-right: 1px solid #eee;
+        padding: 0px;
+    }
+    .row{
+        margin: 0px;
+    }
+    */
+    .scroll{
+        height: 200px; 
+        overflow-y: scroll;
+    }
+    #table-company .table-bordered td:nth-child(1) {  
+         text-align: center;
+    }
+     #table-company .table-bordered td{  
+         font-size: 16px;
+    }
+    .description{
+        height: 80px;
+        overflow-y: scroll;
+    }
+    .request-description{
+        height: 150px;
+        overflow-y: scroll;
+        padding: 10px;
+    }
+
+.breadcrumb ul{
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.breadcrumb{
+  overflow: hidden;
+  width: 100%;
+}
+
+.breadcrumb li{
+  float: left;
+  margin: 0px 5px 0px 20px;
+}
+
+.breadcrumb li{
+  background: #ddd;
+  padding: 5px 10px;
+  float: left;
+  text-decoration: none;
+  color: #444;
+  text-shadow: 0 1px 0 rgba(255,255,255,.5); 
+  position: relative;
+}
+
+.breadcrumb li:hover{
+  background: #EBEBEB;
+}
+.breadcrumb li:first-child::before{
+  content: "";
+  position: absolute;
+  top: 50%; 
+  margin-top: -15px;   
+  border-width: 0;
+  border-style: solid;
+  border-color: #ddd #ddd #ddd transparent;
+  
+}
+.breadcrumb li::before{
+  content: "";
+  position: absolute;
+  top: 50%; 
+  margin-top: -15px;   
+  border-width: 15px 0 15px 20px;
+  border-style: solid;
+  border-color: #ddd #ddd #ddd transparent;
+  left: -20px;
+}
+
+.breadcrumb li:hover::before{
+  border-color: #EBEBEB #EBEBEB #EBEBEB transparent;
+}
+
+.breadcrumb li::after{
+  content: "";
+  position: absolute;
+  top: 50%; 
+  margin-top: -15px;   
+  border-top: 15px solid transparent;
+  border-bottom: 15px solid transparent;
+  border-left: 20px solid #ddd;
+  right: -20px;
+}
+
+.breadcrumb li:hover::after{
+  border-left-color: #EBEBEB;
+}
+
+.breadcrumb > li + li::before{
+    content:"" !important;
+}
+
+
+
+/* notes css */
+
+#notes-box{
+    border: 1px solid #eee;
+    height:300px;
+    overflow-y: scroll;
+    padding:10px;
+}
+#request-notes-box{    
+    height:150px;
+    overflow-y: scroll;
+        
+}
+
+#notes-box .left{
+    width:90%;
+}
+#notes-box .notes_body{border:none;}
+.userme, .useranother{color:#fff;border-radius: 15px;}
+#notes-box .left .notes_body::after, .left .notes_body::before{border:none}
+#notes-box .right .notes_body::after, .right .notes_body::before{border:none}

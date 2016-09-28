@@ -1,0 +1,107 @@
+@media only screen and (max-width:1024px){
+
+#requist-title-wrapper label {
+    width: 100%;
+	font-size: 11px;
+    padding-top: 0px;
+}
+#requist-title-wrapper input[type="text"] {
+    width: 100%;
+	height: 30px;
+}
+#request-form .form-submit {
+    margin-top: 0px;
+}
+
+#request_detail_view .first table tbody td:last-child {
+    border-right: 0px solid #ebebeb;
+}
+#request_detail_view .third table tbody td:last-child {
+    border-right: 0px solid #ebebeb;
+}
+#request_detail_view .third table tbody td.no-border-bottom {
+    border-bottom: 1px solid #ebebeb;
+}
+
+.header .nav > li > a {
+    padding: 8px 10px;
+}
+
+
+}
+
+@media only screen and (max-width:767px){
+
+.top {
+    color: #333333;
+    float: right;
+    margin-top: -75px;
+    width: 100%;
+}
+.navbar-collapse {
+    border-top: 0px solid transparent;
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.1) inset;
+    max-height: 340px;
+    overflow-x: visible;
+}
+.header .nav {
+    width: 100%;
+}
+.header .nav > li {
+    float: left;
+    margin-bottom: 3px;
+    width: 100%;
+}
+.header .nav > li > a {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    margin-right: 0;
+}
+
+.hidden767{
+	display: none;
+}
+
+}
+
+
+@media only screen and (max-width:599px){
+
+.top {
+    color: #333333;
+    float: right;
+    margin-top: -75px;
+    width: 100%;
+}
+.header .nav {
+    width: 100%;
+}
+.navbar-collapse {
+    border-top: 0px solid transparent;
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.1) inset;
+    max-height: 340px;
+    overflow-x: visible;
+}
+.header .nav > li {
+    float: left;
+    margin-bottom: 3px;
+    width: 100%;
+}
+.header .nav > li > a {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    margin-right: 0;
+}
+.hidden599{
+	display: none;
+}
+
+}
+
+@media only screen and (max-width:480px){
+
+.logo .brand img {
+    width: 175px;
+}
+
+}

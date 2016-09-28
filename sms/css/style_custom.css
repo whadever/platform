@@ -1,0 +1,50 @@
+.sidebar{
+	border: 0 solid #002855;
+}
+body .page-container .sidebar-menu{
+	min-height: 585px !important;
+}
+.page-container .sidebar-menu #main-menu li.has-sub > a::before{
+	float: left;
+	margin-left: 4px;
+    margin-right: 4px;
+    top: -2px;
+    font-size:14px;
+}
+body .page-container .sidebar-menu #main-menu li.has-sub > a::before{
+	color: #d7114c;
+}
+.page-container .sidebar-menu #main-menu li ul{
+	border-top: 0;
+}
+body .page-container .sidebar-menu #main-menu li a{
+	padding: 3px 15px;
+}
+body .page-container .sidebar-menu #main-menu li.has-sub > a{
+	padding: 3px;
+}
+body .page-container .sidebar-menu #main-menu li ul{
+	margin-left:10px;
+}
+body .page-container .sidebar-menu #main-menu li ul > li > a{
+	padding: 3px 5px;
+	background: #fff;
+}
+body .page-container .sidebar-menu #main-menu li > a:hover, body .page-container .sidebar-menu #main-menu li ul > li > a:hover, body .page-container .sidebar-menu #main-menu li.active > a{
+	background: #f9e6dd;
+}
+body .page-container .sidebar-menu #main-menu li:last-child{
+	margin-bottom: 0;
+}
+.development-home{
+	background: #fff;
+	padding: 0;
+}
+body .mail-env{
+	margin-left:0px;
+	margin-right: 0px;
+}
+.logout {
+    margin-top: 10px;
+    margin-bottom: 5px;
+}

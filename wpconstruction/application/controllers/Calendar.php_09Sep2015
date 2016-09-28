@@ -1,0 +1,169 @@
+<?php
+class Calendar extends CI_Controller {
+
+	function __construct() {
+		parent::__construct();
+		$this->load->model('user_model','',TRUE);
+        $this->load->model('job_model','',TRUE);
+        date_default_timezone_set("NZ");
+		$this->load->library(array('table','form_validation', 'session'));
+		$this->load->helper(array('url'));
+		$redirect_login_page = base_url().'user';
+		if(!$this->session->userdata('user')){
+				redirect($redirect_login_page,'refresh');
+
+		}
+
+	}
+
+    public function index(){
+
+		$data['title'] = 'Calendar';
+		$user=  $this->session->userdata('user');
+		$data['user']=$user;
+        /*getting job list*/
+        $data['jobs'] = $this->db->query("select id, development_name from construction_development")->result();
+        //$data['maincontent'] = $this->load->view('overview',$data,true);
+		$this->load->view('includes/header',$data);
+		$this->load->view('calendar/home',$data);
+		$this->load->view('includes/footer',$data);
+	}
+
+    /* draws a calendar */
+    function get_calendar($month,$year){
+        $user=  $this->session->userdata('user');
+        /*get all tasks started or ended in this month*/
+        $first_date = date('Y-m-01',mktime(0,0,0,$month,1,$year));
+        $last_date = date('Y-m-t',mktime(0,0,0,$month,1,$year));
+        $today = date('j');
+        $query = "SELECT task.task_name,
+                         task.id                        task_id,
+                         task.development_id            dev_id,
+                         task.task_start_date           start_date,
+                         task.actual_completion_date    end_date,
+                         task.development_task_status,
+                         task.note,
+                         dev.development_name,
+                         contact_contact_list.contact_first_name first_name,
+                         contact_contact_list.contact_last_name last_name,
+                         contact_contact_list.contact_phone_number phone_no,
+                         contact_contact_list.system_user_id
+                  FROM   construction_development_task task LEFT JOIN construction_development dev ON task.development_id = dev.id
+                         LEFT JOIN contact_contact_list on task.task_person_responsible = contact_contact_list.id
+                  WHERE  task_start_date BETWEEN '{$first_date}' and '{$last_date}' OR task.actual_completion_date  BETWEEN '{$first_date}' and '{$last_date}' OR (task_start_date <= '{$first_date}' AND task.actual_completion_date >= '{$last_date}')";
+        $tasks = $this->db->query($query)->result();
+
+        /* draw table */
+        $calendar = '<table cellpadding="0" cellspacing="0" class="calendar">';
+
+        /* table headings */
+        $headings = array('Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday');
+        $calendar.= '<thead><tr class="calendar-row"><th class="calendar-day-head">'.implode('</th><th class="calendar-day-head">',$headings).'</th></tr></thead>';
+
+        /* days and weeks vars now ... */
+        $running_day = date('w',mktime(0,0,0,$month,1,$year));
+
+        /*we have to start the week from monday*/
+        if($running_day == 0){
+            $running_day = 6;
+        }else{
+            $running_day--;
+        }
+
+        $days_in_month = date('t',mktime(0,0,0,$month,1,$year));
+        $days_in_this_week = 1;
+        $day_counter = 0;
+        $dates_array = array();
+
+        /* row for week one */
+        $calendar.='<tbody>';
+        $calendar.= '<tr class="calendar-row">';
+
+        /* print "blank" days until the first of the current week */
+        for($x = 0; $x < $running_day; $x++):
+            $calendar.= '<td class="calendar-day-np"> </td>';
+            $days_in_this_week++;
+        endfor;
+
+        /* keep going with days.... */
+        for($list_day = 1; $list_day <= $days_in_month; $list_day++):
+            $today_class = ($list_day == $today) ?' today' : '';
+            $calendar.= "<td class='calendar-day {$today_class}'>";
+            /* add in the day number */
+            $calendar.= '<div class="day-number">'.$list_day.'</div>';
+
+            /*printing tasks for this date*/
+            $this_date = date('Y-m-d',mktime(0,0,0,$month,$list_day,$year));
+            $list = "<ul>";
+            /*printing tasks for this date*/
+            $this_date = date('Y-m-d',mktime(0,0,0,$month,$list_day,$year));
+            $list = "<ul>";
+            foreach($tasks as $task){
+                if($task->start_date != '0000-00-00' && $task->start_date <= $this_date && $task->end_date >=$this_date){
+                    /*generating classes for this task*/
+                    $class = "";
+                    $tooltip = "";
+                    $tooltip_class = "";
+                    /*class for status*/
+                    if($task->development_task_status == 1){
+                        $class .= "status-complete";
+                        $tooltip_class = "status-complete";
+                    }elseif($task->end_date > $this_date && $task->start_date >= $this_date){
+                        $class .= "status-ontheway";
+                        $tooltip_class = "status-ontheway";
+                    }else{
+                        $class .= "status-overdue";
+                        $tooltip_class = "status-overdue";
+                    }
+                    /*class for job*/
+                    $class .= " job-{$task->dev_id}";
+
+                    /*class for own task*/
+                    if($task->system_user_id && $task->system_user_id == $user->uid){
+                        $class .= " mytask";
+                    }
+                    /*the tooltip div*/
+                    $tooltip_title = "<span class=\"{$tooltip_class}\">{$task->development_name} - {$task->task_name}</span>";
+                    $tooltip = "<div class='tooltip_description'
+										style='display:none;'
+										title='{$tooltip_title}'>".
+                        "<b>Person Responsible:</b> {$task->first_name} {$task->last_name}<br/>".
+                        "<b>Contact Number:</b> {$task->phone_no}<br/>".
+                        "<b>Notes:</b><br>".nl2br($task->note)
+                        ."</div>";
+                    $list .= "<li class='{$class}'>".$task->task_name."{$tooltip}</li>";
+                }
+            }
+            $list .= "</ul>";
+            $calendar .= $list;
+
+            $calendar.= '</td>';
+            if($running_day == 6):
+                $calendar.= '</tr>';
+                if(($day_counter+1) != $days_in_month):
+                    $calendar.= '<tr class="calendar-row">';
+                endif;
+                $running_day = -1;
+                $days_in_this_week = 0;
+            endif;
+            $days_in_this_week++; $running_day++; $day_counter++;
+        endfor;
+
+        /* finish the rest of the days in the week */
+        if($days_in_this_week < 8):
+            for($x = 1; $x <= (8 - $days_in_this_week); $x++):
+                $calendar.= '<td class="calendar-day-np"> </td>';
+            endfor;
+        endif;
+
+        /* final row */
+        $calendar.= '</tr>';
+
+        /* end the table */
+        $calendar.= '<tbody></table>';
+
+        /* all done, return result */
+        echo $calendar; exit;
+    }
+
+}

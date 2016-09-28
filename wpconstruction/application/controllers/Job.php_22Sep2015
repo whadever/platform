@@ -1,0 +1,555 @@
+<?php
+class Job extends CI_controller{
+	
+	function __construct(){
+		parent::__construct();
+		$this->load->helper(array('form', 'url', 'file', 'html', 'email'));
+		$this->load->model('job_model','',TRUE);
+		$this->load->model('admindevelopment_model','',TRUE);
+		$this->load->model('contact_model','',TRUE);
+		$this->load->library(array('table','form_validation', 'session'));
+        $this->load->helper('email');
+        date_default_timezone_set("NZ");
+
+		$redirect_login_page = base_url().'user';
+		if(!$this->session->userdata('user')){
+				redirect($redirect_login_page,'refresh');
+		
+		}
+	}
+	function index($id = null){
+		$user = $this->session->userdata('user'); 
+		$data['title'] = 'Job Overview';
+		$data['latest_job'] = (is_null($id)) ? $this->job_model->get_latest_job() : $this->job_model->get_job($id);
+		$_SESSION['current_job'] = $data['latest_job']->id;
+		$data['maincontent'] = $this->load->view('job/job',$data,true);
+
+		$this->load->view('includes/header',$data);
+		$this->load->view('job/job_home',$data);
+		$this->load->view('includes/footer',$data);
+	}
+	function checklist($id = null){
+
+		$data['latest_job'] = (is_null($id)) ? $this->job_model->get_latest_job() : $this->job_model->get_job($id);
+		$_SESSION['current_job'] = $data['latest_job']->id;
+
+		/*getting stage and list data*/
+		$res = $this->job_model->get_list_data($_SESSION['current_job']);
+		$stage_info = array();
+		foreach($res as $r){
+			$stage_info[$r['stage_id']]['stage_name'] = $r['stage_name'];
+			$stage_info[$r['stage_id']]['lists'][$r['check_list_id']] = array('task_name'=>$r['task_name'], 'note'=>$r['note'], 'status' => $r['status'], 'id'=>$r['id'], 'file_id'=>$r['file_id'], 'filename'=>$r['filename']);
+		}
+		$data['stage_info'] = $stage_info;
+		$data['maincontent'] = $this->load->view('job/checklist',$data,true);
+
+		$this->load->view('includes/header',$data);
+		$this->load->view('job/job_home',$data);
+		$this->load->view('includes/footer',$data);
+	}
+	function add_job(){
+		$data['title'] = "Add job";
+		$user=  $this->session->userdata('user');          
+		$user_id =$user->uid; 
+		$wp_company_id =$user->company_id; 
+
+		$this->_set_rules();
+		if ( $this->form_validation->run() === FALSE ) {
+			//$data['users'] = $this->db->query("select uid, username from users where role != 1")->result();
+			$data['templates'] = $this->db->query("SELECT id, template_name FROM construction_template where wp_company_id='$wp_company_id'")->result_array();
+			$data['maincontent'] = $this->load->view('job/add_job',$data,true);
+			//$this->load->view('includes/header',$data);
+			$this->load->view('includes/popup_home',$data);
+			//$this->load->view('includes/footer',$data);
+		}
+		else
+		{
+
+				$job_data = array(
+					'wp_company_id' => $wp_company_id,
+					'job_number' => $this->input->post('job_number'),
+					'development_name' => $this->input->post('development_name'),
+					'development_location' => $this->input->post('development_location'),
+					'development_city' => $this->input->post('development_city'),
+					'development_size' => $this->input->post('development_size'),
+					//'number_of_stages' => $this->input->post('number_of_stages'),
+					'land_zone' => $this->input->post('land_zone'),
+					'ground_condition' => $this->input->post('ground_condition'),
+					'project_manager' => $this->input->post('project_manager'),
+					'draughtsman' => $this->input->post('draughtsman'),
+					'engineer' => $this->input->post('engineer'),
+					'council' => $this->input->post('council'),
+					'tid' => $this->input->post('tid'),
+					//'civil_manager' => $this->input->post('civil_manager'),
+					//'job_location' => $this->input->post('job_location'),
+					//'number_of_lots' => $this->input->post('number_of_lots'),
+					//'civil_eng' => $this->input->post('civil_eng'),
+					//'geo_tech_eng' => $this->input->post('geo_tech_eng'),
+					'status' => $this->input->post('status'),
+					'created'=>date("Y-m-d H:i:s"),
+					'created_by' => $user_id
+			);
+	
+			$jid = $this->job_model->job_save($job_data);
+
+			/*adding tasks to this job*/
+			/*
+			$tasks = $this->db->query("select * from `construction_check_list` where job_id IS NULL ")->result_array();
+			$insert_data = array();
+			foreach($tasks as $task){
+				$insert_data[] = array(
+					'check_list_id' => $task['id'],
+					'stage_id' => $task['stage_id'],
+					'job_id' => $jid,
+					'status' => 0
+				);
+			}
+			$this->db->insert_batch('construction_check_list_status', $insert_data);
+			*/
+
+
+			$tid = $this->input->post('tid');
+			$development_tid_update = array(
+				'tid' => $tid
+	    	);
+
+			$this->admindevelopment_model->development_tid_update($jid,$development_tid_update);
+
+			$this->admindevelopment_model->development_template_update($jid,$tid);
+
+
+			//redirect('job/index/'.$id);
+			$this->load->view('job/save_success');
+	
+		}
+		
+	}
+	function add_unit(){
+		$data['title'] = "Add Unit Development";
+		$user=  $this->session->userdata('user');
+		$user_id =$user->uid;
+		$wp_company_id =$user->company_id;
+
+		$this->_set_rules();
+		if ( $this->form_validation->run() === FALSE ) {
+			$data['templates'] = $this->db->query("SELECT id, template_name FROM construction_template where wp_company_id='$wp_company_id'")->result_array();
+			$jobs_query = "SELECT dev.*, construction_template.template_name FROM construction_development dev LEFT JOIN construction_template ON dev.tid = construction_template.id
+						   WHERE dev.is_unit = 0 AND dev.parent_unit IS NULL AND dev.wp_company_id='$wp_company_id'
+						   ORDER BY dev.`id` DESC";
+			$data['admindevelopments'] = $this->db->query($jobs_query)->result();
+			$data['maincontent'] = $this->load->view('job/add_unit',$data,true);
+			//$this->load->view('includes/header',$data);
+			$this->load->view('includes/popup_home',$data);
+			//$this->load->view('includes/footer',$data);
+		}
+		else
+		{
+
+			$job_data = array(
+				'wp_company_id' => $wp_company_id,
+				'job_number' => $this->input->post('job_number'),
+				'development_name' => $this->input->post('development_name'),
+				'tid' => $this->input->post('tid'),
+				'status' => 1,
+				'is_unit' => 1,
+				'created'=>date("Y-m-d H:i:s"),
+				'created_by' => $user_id
+			);
+
+			$jid = $this->job_model->job_save($job_data);
+
+			/*adding tasks to this job*/
+			/*
+			$tasks = $this->db->query("select * from `construction_check_list` where job_id IS NULL ")->result_array();
+			$insert_data = array();
+			foreach($tasks as $task){
+				$insert_data[] = array(
+					'check_list_id' => $task['id'],
+					'stage_id' => $task['stage_id'],
+					'job_id' => $jid,
+					'status' => 0
+				);
+			}
+			$this->db->insert_batch('construction_check_list_status', $insert_data);
+			*/
+
+
+			$tid = $this->input->post('tid');
+			$development_tid_update = array(
+				'tid' => $tid
+			);
+
+			$this->admindevelopment_model->development_tid_update($jid,$development_tid_update);
+
+			$this->admindevelopment_model->development_template_update($jid,$tid);
+
+			//redirect('job/index/'.$id);
+			/*related jobs*/
+			$related_jobs =  implode(',',$this->input->post('related_jobs'));
+			$this->db->simple_query("update construction_development set parent_unit = {$jid} where id in ({$related_jobs})");
+			$this->load->view('job/save_success');
+
+		}
+
+	}
+	function edit_job(){
+		$data['title'] = "Edit job";
+		$user=  $this->session->userdata('user');
+		$user_id =$user->uid;
+		$wp_company_id =$user->company_id;
+
+		$this->_set_rules();
+		if ( $this->form_validation->run() === FALSE ) {
+			//$data['users'] = $this->db->query("select uid, username from users where role != 1")->result();
+			$data['templates'] = $this->db->query("SELECT id, template_name FROM construction_template WHERE wp_company_id='$wp_company_id'")->result_array();
+			$data['jobs'] = $this->db->query("SELECT id, job_number, development_name FROM construction_development WHERE wp_company_id='$wp_company_id'")->result_array();
+			$data['maincontent'] = $this->load->view('job/edit_job',$data,true);
+			//$this->load->view('includes/header',$data);
+			$this->load->view('includes/popup_home',$data);
+			//$this->load->view('includes/footer',$data);
+		}
+		else
+		{
+
+			$job_data = array(
+				//'job_number' => $this->input->post('job_number'),
+				'development_name' => $this->input->post('development_name'),
+				'development_location' => $this->input->post('development_location'),
+				'development_city' => $this->input->post('development_city'),
+				'development_size' => $this->input->post('development_size'),
+				//'number_of_stages' => $this->input->post('number_of_stages'),
+				'land_zone' => $this->input->post('land_zone'),
+				'ground_condition' => $this->input->post('ground_condition'),
+				'project_manager' => $this->input->post('project_manager'),
+				'tid' => $this->input->post('tid'),
+				//'civil_manager' => $this->input->post('civil_manager'),
+				//'job_location' => $this->input->post('job_location'),
+				//'number_of_lots' => $this->input->post('number_of_lots'),
+				//'civil_eng' => $this->input->post('civil_eng'),
+				//'geo_tech_eng' => $this->input->post('geo_tech_eng'),
+				'status' => $this->input->post('status'),
+				'created'=>date("Y-m-d H:i:s"),
+				'created_by' => $user_id
+			);
+
+			$id = $this->job_model->job_update($this->input->post('id'),$job_data);
+			//redirect('job');
+			$this->load->view('job/save_success');
+		}
+
+	}
+	function job_view(){
+	
+		$data['latest_job'] = $this->job_model->get_latest_job();
+		$data['maincontent'] = $this->load->view('job/view_job',$data,true);
+		$this->load->view('includes/header',$data);
+		$this->load->view('job/job_home',$data);
+		$this->load->view('includes/footer',$data);
+
+	}
+	function _set_rules(){
+		 $this->form_validation->set_rules('job_name', 'Job Name');
+	}
+	function show_popup_menu()
+	{
+		$data['maincontent'] = $this->load->view('includes/popup_menu',array(),true);
+		$this->load->view('includes/popup_home',$data);
+	}
+	function get_job_details($id){
+		if($id){
+			$data =  $this->db->query('SELECT * FROM construction_development where id = '.$id.' limit 0,1')->row();
+			$this->output
+				->set_content_type('application/json')
+				->set_output(json_encode($data));
+		}
+	}
+	function change_job()
+	{
+		$data['jobs'] = $this->job_model->get_job_list();
+		$data['maincontent'] = $this->load->view('job/change_job',$data,true);
+		$this->load->view('includes/popup_home',$data);
+	}
+	function add_list(){
+		$data['title'] = "Add List";
+		$user=  $this->session->userdata('user');
+		$user_id =$user->uid;
+
+		$this->_set_rules();
+		if ( $this->form_validation->run() === FALSE ) {
+			$data['maincontent'] = $this->load->view('list/add_list',$data,true);
+			//$this->load->view('includes/header',$data);
+			$this->load->view('includes/popup_home',$data);
+			//$this->load->view('includes/footer',$data);
+		}
+		else
+		{
+
+			$job_data = array(
+				'job_number' => $this->input->post('job_number'),
+				'development_name' => $this->input->post('development_name'),
+				'development_location' => $this->input->post('development_location'),
+				'development_city' => $this->input->post('development_city'),
+				'development_size' => $this->input->post('development_size'),
+				//'number_of_stages' => $this->input->post('number_of_stages'),
+				'land_zone' => $this->input->post('land_zone'),
+				'ground_condition' => $this->input->post('ground_condition'),
+				'project_manager' => $this->input->post('project_manager'),
+				'tid' => $this->input->post('tid'),
+				//'civil_manager' => $this->input->post('civil_manager'),
+				//'job_location' => $this->input->post('job_location'),
+				//'number_of_lots' => $this->input->post('number_of_lots'),
+				//'civil_eng' => $this->input->post('civil_eng'),
+				//'geo_tech_eng' => $this->input->post('geo_tech_eng'),
+				'created'=>date("Y-m-d H:i:s"),
+				'created_by' => $user_id
+			);
+
+			$id = $this->job_model->job_save($job_data);
+			//redirect('job');
+			$this->load->view('job/save_success');
+
+		}
+	}
+
+	function edit_list(){
+		$user=  $this->session->userdata('user');
+		$wp_company_id =$user->company_id;
+
+		$data = array();
+		$query = "SELECT id, stage_name FROM `construction_check_stage` where wp_company_id='$wp_company_id'";
+		$data['stages'] = $this->db->query($query)->result_array();
+		$data['maincontent'] = $this->load->view('list/edit_list',$data,true);
+		//$this->load->view('includes/header',$data);
+		$this->load->view('includes/popup_home',$data);
+	}
+
+	function add_stage(){
+		$name = $this->input->post('name');
+		$job_id = $_SESSION['current_job'];
+		$user=  $this->session->userdata('user');
+		$user_id =$user->uid;
+		$wp_company_id =$user->company_id;
+		$created = date("Y-m-d H:i:s");
+
+		$query = "INSERT INTO `construction_check_stage` ( `wp_company_id` , `stage_name` , `job_id` , `status` , `created_by` , `created` )
+				  VALUES ('{$wp_company_id}', '{$name}', '{$job_id}', '0', '{$user_id}', '{$created}')";
+		if($this->db->simple_query($query)){
+			echo $this->db->insert_id();
+		}else{
+			echo -1;
+		}
+		exit;
+
+	}
+
+	function update_stage($id){
+		$name = $this->input->post('name');
+
+		$query = "UPDATE `construction_check_stage` SET stage_name = '{$name}' where id = {$id}";
+		if($this->db->simple_query($query)){
+			echo 1;
+		}else{
+			echo -1;
+		}
+		exit;
+
+	}
+
+	function add_task(){
+
+		$name = $this->input->post('name');
+		$stage_id = $this->input->post('stage');
+		$job_id = $_SESSION['current_job'];
+		$user=  $this->session->userdata('user');
+		$user_id =$user->uid;
+		$created = date("Y-m-d H:i:s");
+
+		$query = "INSERT INTO `construction_check_list` ( `stage_id` , `job_id` ,  `task_name` , `status` , `created_by` , `created` )
+				  VALUES ('{$stage_id}', NULL, '{$name}', '0', '{$user_id}', '{$created}')";
+
+		if($this->db->simple_query($query)){
+			$task_id = $this->db->insert_id();
+			/*now adding this task to every job*/
+			$jobs = $this->db->query('select id from construction_development')->result_array();
+			$insert_data = array();
+			foreach($jobs as $job){
+				$insert_data[] = array(
+					'check_list_id' => $task_id,
+					'stage_id' => $stage_id,
+					'job_id' => $job['id'],
+					'status' => 0
+				);
+			}
+			$this->db->insert_batch('construction_check_list_status', $insert_data);
+			echo $task_id;
+		}else{
+			echo -1;
+		}
+		exit;
+
+	}
+
+	function add_task_to_job(){
+
+		$name = $this->input->post('name');
+		$stage_id = $this->input->post('stage');
+		$job_id = $_SESSION['current_job'];
+		$user=  $this->session->userdata('user');
+		$user_id =$user->uid;
+		$created = date("Y-m-d H:i:s");
+
+		$query = "INSERT INTO `construction_check_list` ( `stage_id` , `job_id` ,  `task_name` , `status` , `created_by` , `created` )
+				  VALUES ('{$stage_id}', '{$job_id}', '{$name}', '0', '{$user_id}', '{$created}')";
+
+		if($this->db->simple_query($query)){
+			$task_id = $this->db->insert_id();
+			/*now adding this task to the job*/
+			$insert_data = array(
+				'check_list_id' => $task_id,
+				'stage_id' => $stage_id,
+				'job_id' => $job_id,
+				'status' => 0
+			);
+			$this->db->insert('construction_check_list_status', $insert_data);
+			echo json_encode(array('task_id'=>$task_id,'status_id'=>$this->db->insert_id()));
+		}else{
+			echo -1;
+		}
+		exit;
+
+	}
+
+	function update_task($id){
+		$name = $this->input->post('name');
+		$query = "UPDATE `construction_check_list` SET task_name = '{$name}' where id={$id}";
+		if($this->db->simple_query($query)){
+			echo 1;
+		}else{
+			echo -1;
+		}
+		exit;
+
+	}
+	function update_note($id){
+		$note = $this->input->post('note');
+		$query = "UPDATE `construction_check_list_status` SET note = '{$note}' where id={$id}";
+		if($this->db->simple_query($query)){
+			echo 1;
+		}else{
+			echo -1;
+		}
+		exit;
+	}
+	function update_task_status($id){
+		$status = $this->input->post('status');
+		$stage_id = $this->input->post('stage_id');
+		$job_id = $_SESSION['current_job'];
+		$check_query = "SELECT count(*) cnt FROM construction_check_list_status WHERE stage_id = $stage_id AND job_id = $job_id AND check_list_id = ".$id;
+		$num = $this->db->query($check_query)->row();
+		if( $num->cnt == 0)
+		{
+			$query = "INSERT INTO  `construction_check_list_status` (check_list_id, stage_id,job_id,status) VALUES('$id', '$stage_id','$job_id', '$status' ) ";
+			
+		}else
+		{
+			$query = "UPDATE `construction_check_list_status` SET status = {$status} where stage_id = $stage_id AND job_id = $job_id AND check_list_id = ".$id;
+		}
+		if($this->db->simple_query($query)){
+			echo 1;
+		}else{
+			echo -1;
+		}
+		exit;
+	}
+	function delete_task($id){
+		$query = "delete from `construction_check_list`  where id={$id}";
+		if($this->db->simple_query($query)){
+			echo 1;
+		}else{
+			echo -1;
+		}
+		exit;
+
+	}
+	function load_list($stage_id){
+		$query = "select * from `construction_check_list` where stage_id = ".$stage_id;
+		$data['list'] = $this->db->query($query)->result_array();
+		$this->load->view('list/list',$data);
+
+	}
+	function delete_check_list($id){
+		if($this->db->simple_query("delete from `construction_check_list_status` where id=$id")){
+			echo 1;
+		}else{
+			echo -1;
+		}
+		exit;
+	}
+	function trade_contact_list($id = null){
+
+		$data['latest_job'] = (is_null($id)) ? $this->job_model->get_latest_job() : $this->job_model->get_job($id);
+		$_SESSION['current_job'] = $data['latest_job']->id;
+		
+		$data['contacts'] = $this->contact_model->get_contact_list()->result();
+		$data['job_task_list'] = $this->job_model->get_job_task_list($_SESSION['current_job']);
+		$data['job_phase_list'] = $this->job_model->get_job_phase_list($_SESSION['current_job']);
+		$data['maincontent'] = $this->load->view('job/trade_contact_list',$data,true);
+		$this->load->view('includes/header',$data);
+		$this->load->view('job/job_home',$data);
+		$this->load->view('includes/footer',$data);
+
+	}
+
+	public function save_task_document($did){
+    	
+    	$user=  $this->session->userdata('user');          
+        $user_id =$user->uid; 
+         
+        $post = $this->input->post();
+
+        $config['upload_path'] = UPLOAD_FILE_PATH_DEVELOPMENT_DOCUMENT;
+        
+        $config['allowed_types'] = 'pdf|xls|xlsx|csv';
+		//$config['max_size'] = '1000000';
+		$config['overwrite'] = TRUE;
+        $this->load->library('upload', $config);
+        $this->upload->initialize($config);
+               
+        if ($this->upload->do_upload('upload_document')){
+	        $upload_data = $this->upload->data();	        
+	        // insert data to file table
+	        // get latest id from frim table and insert it to loan table
+	        $document = array(             
+	        	'filename'=>$upload_data['file_name'],
+	            'filetype'=>$upload_data['file_type'],
+	            'filesize'=>$upload_data['file_size'],
+	            'filepath'=>$upload_data['full_path'],
+	            'filename_custom'=>$post['file_title'],
+	            'created'=>time(),
+	            'uid'=>$user_id
+	        );
+
+            $id = $this->job_model->file_insert($document);
+
+			$task_id = $post['check_list_id'];
+			$update = array(             
+	        	'file_id' => $id
+	        );
+			$this->job_model->update_check_list($task_id,$update);            	          	                                     
+		}
+        redirect('job/checklist/'.$did); 
+    }  
+
+	public function check_list_file_delete($fid,$id,$did){
+         
+        $this->job_model->file_delete($fid);
+
+		$update = array(             
+        	'file_id' => 0
+        );
+		$this->job_model->update_check_list($id,$update); 
+           	          	                                     
+        redirect('job/checklist/'.$did); 
+    }  
+	
+}
